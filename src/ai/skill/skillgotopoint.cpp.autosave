@@ -1,0 +1,14 @@
+#include "skillgotopoint.h"
+
+SkillGotoPoint::SkillGotoPoint(int id, QString name, QObject *parent) :
+    Skill(id, name, parent)
+{
+}
+
+bool SkillGotoPoint::execute(Agent *agent, RobotCommand &rc)
+{
+    rc.FinalPos=Position();
+    rc.TargetPos=Position();
+    rc.Speed=1;
+    return true;
+}
