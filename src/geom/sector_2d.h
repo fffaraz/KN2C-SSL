@@ -32,8 +32,8 @@
 #ifndef RCSC_GEOM_SECTOR2D_H
 #define RCSC_GEOM_SECTOR2D_H
 
-#include <geom/region_2d.h>
-#include <geom/vector_2d.h>
+#include "region_2d.h"
+#include "vector_2d.h"
 
 namespace rcsc {
 
@@ -146,6 +146,18 @@ public:
      */
     virtual
     double area() const;
+
+    virtual
+    Vector2D centroid() const
+    {
+        return center();
+    }
+
+    virtual
+    Region2DType type() const
+    {
+        return REGION_SECTOR;
+    }
 
     /*!
       \brief check if point is within this region

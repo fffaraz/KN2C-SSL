@@ -32,19 +32,18 @@
 #ifndef RCSC_GEOM_H
 #define RCSC_GEOM_H
 
-#include <geom/angle_deg.h>
-#include <geom/circle_2d.h>
-#include <geom/delaunay_triangulation.h>
-#include <geom/line_2d.h>
-#include <geom/matrix_2d.h>
-#include <geom/polygon_2d.h>
-#include <geom/ray_2d.h>
-#include <geom/rect_2d.h>
-#include <geom/sector_2d.h>
-#include <geom/segment_2d.h>
-#include <geom/size_2d.h>
-#include <geom/triangle_2d.h>
-#include <geom/vector_2d.h>
+#include "angle_deg.h"
+#include "circle_2d.h"
+#include "line_2d.h"
+#include "matrix_2d.h"
+#include "polygon_2d.h"
+#include "ray_2d.h"
+#include "rect_2d.h"
+#include "sector_2d.h"
+#include "segment_2d.h"
+#include "size_2d.h"
+#include "triangle_2d.h"
+#include "vector_2d.h"
 
 using namespace rcsc;
 

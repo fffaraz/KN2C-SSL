@@ -1,0 +1,33 @@
+
+
+  bool gameOn()
+
+  bool restart()
+  bool ourRestart()
+  bool theirRestart()
+
+  bool kickoff()
+  bool ourKickoff()
+  bool theirKickoff()
+
+  bool penaltyKick()
+  bool ourPenaltyKick()
+  bool theirPenaltyKick()
+
+  bool directKick()
+  bool ourDirectKick()
+  bool theirDirectKick()
+
+  bool indirectKick()
+  bool ourIndirectKick()
+  bool theirIndirectKick()
+
+  bool freeKick()
+  bool ourFreeKick()
+  bool theiFreeKick()
+
+  bool canMove()
+
+  bool allowedNearBall()
+
+  bool canKickBall()

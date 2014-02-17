@@ -1,5 +1,13 @@
 <RCC>
     <qresource prefix="/">
         <file>resources/images/Field.jpg</file>
+        <file>resources/formations/formation_5/FreeKick.conf</file>
+        <file>resources/formations/formation_5/FreeKickUs.conf</file>
+        <file>resources/formations/formation_6/FreeKick.conf</file>
+        <file>resources/formations/formation_6/FreeKickOpp.conf</file>
+        <file>resources/formations/formation_6/FreeKickUs.conf</file>
+        <file>resources/formations/formation_6/Normal.conf</file>
+        <file>resources/formations/formation_5/Normal.conf</file>
+        <file>resources/formations/formation_5/FreeKickOpp.conf</file>
     </qresource>
 </RCC>

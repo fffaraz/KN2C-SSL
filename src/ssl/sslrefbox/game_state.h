@@ -138,7 +138,7 @@ public:
 
   bool freeKick() { return directKick() || indirectKick(); }
   bool ourFreeKick() { return ourDirectKick() || ourIndirectKick(); }
-  bool theiFreeKick() { return theirDirectKick() || theirIndirectKick(); }
+  bool theirFreeKick() { return theirDirectKick() || theirIndirectKick(); }
 
   bool canMove() { return (state != HALTED); }
 
@@ -147,6 +147,13 @@ public:
 
   bool canKickBall() {
     return gameOn() || (ourRestart() && (state & READY)); }
+
+  int getColor()
+  {
+      // Blue   --> 0
+      // Yellow --> 1
+      return color;
+  }
 
 };
 

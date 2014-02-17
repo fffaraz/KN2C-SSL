@@ -32,7 +32,7 @@
 #ifndef RCSC_GEOM_LINE2D_H
 #define RCSC_GEOM_LINE2D_H
 
-#include <geom/vector_2d.h>
+#include "vector_2d.h"
 
 #include <cmath>
 

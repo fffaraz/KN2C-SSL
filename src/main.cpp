@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     cout << "KN2C Small Size League Robocup Team" << endl;
     cout << "K.N.Toosi University of Technology" << endl;
     cout << "Computer & Electrical Eng. Faculty" << endl;
-    cout << "Version 5.00" << endl;
+    cout << "Version 5.5" << endl;
     cout << endl;
 
     Soccer soccer;

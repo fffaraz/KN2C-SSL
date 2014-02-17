@@ -1,91 +1,397 @@
 #include "strategydefault.h"
-#include "plays.h"
 
-StrategyDefault::StrategyDefault(WorldModel *wm, QObject *parent) :
-    Strategy(wm, "StrategyDefault", parent),
-    _knowledge(wm, &_result)
+StrategyDefault::StrategyDefault(WorldModel *wm, QMap<int, Agent *> &agents, QObject *parent) :
+    Strategy(wm, agents, "StrategyDefault", parent),
+    _knowledge(wm)
 {
-    // Creating and setting parameters of used plays in this strategy
-    PlayNull* playnull = new PlayNull(wm, &_result, &_knowledge, this);
-    PlayStop* playstop = new PlayStop(wm, &_result, &_knowledge, this);
-    PlayHalt* playhalt = new PlayHalt(wm, &_result, &_knowledge, this);
-    PlayFreeKickOpp* playfreekickopp =  new PlayFreeKickOpp(wm, &_result, &_knowledge, this);
-    PlayFreeKickOur* playfreekickour =  new PlayFreeKickOur(wm, &_result, &_knowledge, this);
-    PlayGameOn* playgameon = new PlayGameOn(wm, &_result, &_knowledge, this);
-    PlayKickoffOpp* playkickoffopp = new PlayKickoffOpp(wm, &_result, &_knowledge, this);
-    PlayKickoffOur* playkickoffour0 = new PlayKickoffOur(wm, &_result, &_knowledge, this);
-    playkickoffour0->setCanKick(false);
-    PlayKickoffOur* playkickoffour1 = new PlayKickoffOur(wm, &_result, &_knowledge, this);
-    playkickoffour1->setCanKick(true);
-    PlayPenaltyOpp* playpenaltyopp = new PlayPenaltyOpp(wm, &_result, &_knowledge, this);
-    PlayPenaltyOur* playpenaltyour0 = new PlayPenaltyOur(wm, &_result, &_knowledge, this);
-    playpenaltyour0->setCanKick(false);
-    PlayPenaltyOur* playpenaltyour1 = new PlayPenaltyOur(wm, &_result, &_knowledge, this);
-    playpenaltyour1->setCanKick(true);
+    robotNum = _knowledge.countActiveAgents();
 
-    Play* plays[12];
-    plays[0] = playnull;
-    //plays[0] = new PlayTest(wm, &_result, &_knowledge, this);
-    plays[1] = playstop;
-    plays[2] = playhalt;
-    plays[3] = playfreekickopp;
-    plays[4] = playfreekickour;
-    plays[5] = playgameon;
-    plays[6] = playkickoffopp;
-    plays[7] = playkickoffour0;
-    plays[8] = playkickoffour1;
-    plays[9] = playpenaltyopp;
-    plays[10] = playpenaltyour0;
-    plays[11] = playpenaltyour1;
+    wm->sixNormalFormation->createFormationTable(GameOn);
+    wm->sixFreeKickOurFormation->createFormationTable(DirectFreeKickOur);
+    wm->sixFreeKickOppFormation->createFormationTable(DirectFreeKickOpp);
 
-    for(int i=0; i<12; i++)
-        _playList.append(plays[i]);
+    wm->fiveNormalFormation->createFormationTable(GameOn);
+    wm->fiveFreeKickOurFormation->createFormationTable(DirectFreeKickOur);
+    wm->fiveFreeKickOppFormation->createFormationTable(DirectFreeKickOpp);
+
+    qDebug() << wm->sixNormalFormation->M_sample_vector->size();
+    qDebug() << wm->fiveNormalFormation->M_sample_vector->size();
+    qDebug() << wm->sixFreeKickOurFormation->M_sample_vector->size();
+    qDebug() << wm->sixFreeKickOppFormation->M_sample_vector->size();
+    qDebug() << wm->fiveFreeKickOurFormation->M_sample_vector->size();
+    qDebug() << wm->fiveFreeKickOppFormation->M_sample_vector->size();
+
+    _firstTimeFlag = true;
+
+    _tg = new TacticGoalie(_wm,&_knowledge);
+    _tlb = new TacticLeftBack(_wm,&_knowledge);
+    _trb = new TacticRightBack(_wm,&_knowledge);
+    _tcb = new TacticCenterBack(_wm,&_knowledge);
+    _tcm = new TacticCenterMidfielder(_wm,&_knowledge);
+    _tlf = new TacticLeftForward(_wm,&_knowledge);
+    _trf = new TacticRightForward(_wm,&_knowledge);
+    _tcf = new TacticCenterForward(_wm,&_knowledge);
+    _validTactics3.append(_tg->Name());
+    _validTactics3.append(_tlb->Name());
+    _validTactics3.append(_trb->Name());
+
+    _validTactics4.append(_tg->Name());
+    _validTactics4.append(_tlb->Name());
+    _validTactics4.append(_trb->Name());
+    _validTactics4.append(_tcm->Name());
+
+    _validTactics5.append(_tg->Name());
+    _validTactics5.append(_tlb->Name());
+    _validTactics5.append(_trb->Name());
+    _validTactics5.append(_tcm->Name());
+    _validTactics5.append(_tcf->Name());
+
+    _validTactics6.append(_tg->Name());
+    _validTactics6.append(_tlb->Name());
+    _validTactics6.append(_trb->Name());
+    _validTactics6.append(_tcm->Name());
+    _validTactics6.append(_tlf->Name());
+    _validTactics6.append(_trf->Name());
 }
 
 bool StrategyDefault::ExecuteStrategyEngine()
 {
-    printResult();
-
-    // 1 : find play
-    bool playsEnterCondition[PLAYERS_MAX_NUM];
-    int playsCounter=0;
-    int lastplay=0;
-    //qDebug() << "-------------------";
-    for(int i=0; i<_playList.count(); i++)
+    if (_knowledge.countActiveAgents()==0)
+        return false;
+    if(_firstTimeFlag)
     {
-        playsEnterCondition[i]=_playList[i]->EnterCondition();
-        //qDebug() << i << _playList[i]->Name() << playsEnterCondition[i];
-        if(playsEnterCondition[i])
+        robotNum = _knowledge.countActiveAgents();
+        if (_wm->ourRobot[GOALIE_ID].isValid)
         {
-            lastplay=i;
-            playsCounter++;
+            _tg->setRID(GOALIE_ID);
+            _agents[GOALIE_ID]->assignTactic(_tg);
+            _knowledge.validGoalie = true;
+        }
+        else
+        {
+            _knowledge.validGoalie = false;
+            _agents[GOALIE_ID]->assignTactic(0);
+        }
+        QList <Vector2D> staticPositions;
+        int roles = _knowledge.countActiveRoles();
+        if (roles > 2)
+            for(int cnt = 1 ; cnt<roles ; cnt++)
+                staticPositions.append(_wm->position(cnt,roles,_wm->ball.pos.loc, GameOn));
+        QList <Vector2D> history = staticPositions;
+        for (int i = 0 ; i<PLAYERS_MAX_NUM ; i++)
+        {
+            if (!_wm->ourRobot[i].isValid || !_agents[i]->isDummy())
+                continue;
+            int  temp;
+            if (roles > 2)
+            {
+                Vector2D myPos = _knowledge.findNearestPositionToRobot(staticPositions,i);
+                temp = history.indexOf(myPos);
+                staticPositions.removeOne(myPos);
+            }
+            switch (roles)
+            {
+            case 6:
+                switch (temp)
+                {
+                case 0:
+                    _tlb->setRID(i);
+                    _agents[i]->assignTactic(_tlb);
+                    break;
+                case 1:
+                    _trb->setRID(i);
+                    _agents[i]->assignTactic(_trb);
+                    break;
+                case 2:
+                    _tcm->setRID(i);
+                    _agents[i]->assignTactic(_tcm);
+                    break;
+                case 3:
+                    _tlf->setRID(i);
+                    _agents[i]->assignTactic(_tlf);
+                    break;
+                case 4:
+                    _trf->setRID(i);
+                    _agents[i]->assignTactic(_trf);
+                    break;
+                }
+                break;
+            case 5:
+                switch (temp)
+                {
+                case 0:
+                    _tlb->setRID(i);
+                    _agents[i]->assignTactic(_tlb);
+                    break;
+                case 1:
+                    _trb->setRID(i);
+                    _agents[i]->assignTactic(_trb);
+                    break;
+                case 2:
+                    _tcm->setRID(i);
+                    _agents[i]->assignTactic(_tcm);
+                    break;
+                case 3:
+                    _tcf->setRID(i);
+                    _agents[i]->assignTactic(_tcf);
+                    break;
+                }
+                break;
+            case 4:
+                switch (temp)
+                {
+                case 0:
+                    _tlb->setRID(i);
+                    _agents[i]->assignTactic(_tlb);
+                    break;
+                case 1:
+                    _trb->setRID(i);
+                    _agents[i]->assignTactic(_trb);
+                    break;
+                case 2:
+                    _tcm->setRID(i);
+                    _agents[i]->assignTactic(_tcm);
+                    break;
+                }
+                break;
+            case 3:
+                switch(temp)
+                {
+                case 0:
+                    _tlb->setRID(i);
+                    _agents[i]->assignTactic(_tlb);
+                    break;
+                case 1:
+                    _trb->setRID(i);
+                    _agents[i]->assignTactic(_trb);
+                    break;
+                }
+                break;
+            case 2:
+                _tcb->setRID(i);
+                _agents[i]->assignTactic(_tcb);
+                break;
+            default :
+                break;
+            }
+        }
+        _firstTimeFlag = false;
+    }
+    else
+    {
+        if(_knowledge.countActiveAgents() != robotNum)
+        {
+            for (int cnt = 0 ; cnt < PLAYERS_MAX_NUM ; cnt++)
+            {
+                if (!_wm->ourRobot[cnt].isValid && !_agents[cnt]->isDummy())
+                    _agents[cnt]->assignTactic(0);
+            }
+            robotNumChanged();
         }
     }
-    //qDebug() << "-------------------";
-    if(playsCounter==2) _result.play=_playList[lastplay];
-    else if(playsCounter==1) _result.play=_playList[0];
-    else qDebug() << "~~~ playsCounter!=2 ~~~";
-    //qDebug() << "Play: " << _result.play->Name();
 
-    // 2 : execute play engine
-    return _result.play->ExecutePlayEngine();
+    return true;
 }
 
-void StrategyDefault::printResult()
+void StrategyDefault::robotNumChanged()
 {
-    qDebug() << "+++++++++++++++++++++++++++++++++++++";
-    qDebug() << "PLAY: " << _result.play->Name();
-    for(int i=0; i<PLAYERS_MAX_NUM; i++)
+    robotNum = _knowledge.countActiveAgents();
+    if (_wm->ourRobot[GOALIE_ID].isValid)
     {
-        if(!_wm->ourRobot[i].isValid) continue;
-        qDebug() << "---------------------------------";
-        qDebug() << "R" << i << ":: " <<
-                    _result.roles[i]->Name() << " "
-                 << _result.tactics[i]->Name() << " "
-                 << getSkill(i)->Name() << " "
-                 << _result.skills[i]->Name() << " "
-                 << QString::number((int)_result.useSkill[i]) << " "
-                 << QString::number(_result.tactics[i]->RID());
+        _tg->setRID(GOALIE_ID);
+        _agents[GOALIE_ID]->assignTactic(_tg);
+        _knowledge.validGoalie = true;
     }
+    else
+    {
+        _agents[GOALIE_ID]->assignTactic(0);
+        _knowledge.validGoalie = false;
+    }
+    QList <Vector2D> staticPositions;
+    int roles = _knowledge.countActiveRoles();
+    if (roles > 2)
+        for(int cnt = 1 ; cnt<roles ; cnt++)
+            staticPositions.append(_wm->position(cnt,roles,_wm->ball.pos.loc, GameOn));
+    QList <Vector2D> history = staticPositions;
+    for (int i = 0 ; i<PLAYERS_MAX_NUM ; i++)
+    {
+        if (!_wm->ourRobot[i].isValid || i==GOALIE_ID)
+            continue;
+        if(hasValidTactic(i))
+        {
+            QList <QString> tempList;
+            switch (roles)
+            {
+            case 6:
+                tempList = _validTactics6;
+                break;
+            case 5:
+                tempList = _validTactics5;
+                break;
+            case 4:
+                tempList = _validTactics4;
+                break;
+            case 3:
+                tempList = _validTactics3;
+                break;
+            }
+            staticPositions.removeOne(history.at(tempList.indexOf(_agents[i]->tactic()->Name())-1));
+            continue;
+        }
+    }
+    for (int i = 0 ; i<PLAYERS_MAX_NUM ; i++)
+    {
+        if (!_wm->ourRobot[i].isValid || hasValidTactic(i))
+            continue;
+        int  temp;
+        if (_knowledge.countActiveAgents() > 2)
+        {
+            Vector2D myPos = _knowledge.findNearestPositionToRobot(staticPositions,i);
+            temp = history.indexOf(myPos);
+            staticPositions.removeOne(myPos);
+        }
+        switch (roles)
+        {
+        case 6:
+            switch (temp)
+            {
+            case 0:
+                _tlb->setRID(i);
+                _agents[i]->assignTactic(_tlb);
+                break;
+            case 1:
+                _trb->setRID(i);
+                _agents[i]->assignTactic(_trb);
+                break;
+            case 2:
+                _tcm->setRID(i);
+                _agents[i]->assignTactic(_tcm);
+                break;
+            case 3:
+                _tlf->setRID(i);
+                _agents[i]->assignTactic(_tlf);
+                break;
+            case 4:
+                _trf->setRID(i);
+                _agents[i]->assignTactic(_trf);
+                break;
+            }
+            break;
+        case 5:
+            switch (temp)
+            {
+            case 0:
+                _tlb->setRID(i);
+                _agents[i]->assignTactic(_tlb);
+                break;
+            case 1:
+                _trb->setRID(i);
+                _agents[i]->assignTactic(_trb);
+                break;
+            case 2:
+                _tcm->setRID(i);
+                _agents[i]->assignTactic(_tcm);
+                break;
+            case 3:
+                _tcf->setRID(i);
+                _agents[i]->assignTactic(_tcf);
+                break;
+            }
+            break;
+        case 4:
+            switch (temp)
+            {
+            case 0:
+                _tlb->setRID(i);
+                _agents[i]->assignTactic(_tlb);
+                break;
+            case 1:
+                _trb->setRID(i);
+                _agents[i]->assignTactic(_trb);
+                break;
+            case 2:
+                _tcm->setRID(i);
+                _agents[i]->assignTactic(_tcm);
+                break;
+            }
+            break;
+        case 3:
+            switch(temp)
+            {
+            case 0:
+                _tlb->setRID(i);
+                _agents[i]->assignTactic(_tlb);
+                break;
+            case 1:
+                _trb->setRID(i);
+                _agents[i]->assignTactic(_trb);
+                break;
+            }
+            break;
+        case 2:
+            _tcb->setRID(i);
+            _agents[i]->assignTactic(_tcb);
+            break;
+        default :
+            break;
+        }
+    }
+}
 
+bool StrategyDefault::hasValidTactic(int rid)
+{
+    if (_agents[rid]->isDummy())
+        return false;
+    if (_agents[rid]->tactic()->Name().compare(_tg->Name())==0)
+        return true;
+    QList <QString> myTactics;
+    int roles = _knowledge.countActiveRoles();
+    switch (roles)
+    {
+    case 6:
+        myTactics = _validTactics6;
+        break;
+    case 5:
+        myTactics = _validTactics5;
+        break;
+    case 4:
+        myTactics = _validTactics4;
+        break;
+    case 3:
+        myTactics = _validTactics3;
+        break;
+    default:
+        break;
+
+    }
+    return myTactics.contains(_agents[rid]->tactic()->Name());
+}
+
+bool StrategyDefault::ExecuteStrategyEngine1()
+{
+    if(_knowledge.countActiveAgents()==0)
+        return false;
+    if (_firstTimeFlag)
+    {
+        if (_wm->ourRobot[GOALIE_ID].isValid)
+        {
+            _tg->setRID(GOALIE_ID);
+            _agents[GOALIE_ID]->assignTactic(_tg);
+            _knowledge.validGoalie = true;
+        }
+        else
+            _knowledge.validGoalie = false;
+        robotNum = _knowledge.countActiveAgents();
+        QList <Vector2D> staticPositions;
+        if (robotNum > 2)
+            for(int cnt = 1 ; cnt<robotNum ; cnt++)
+                staticPositions.append(_wm->position(cnt,robotNum,_wm->ball.pos.loc, GameOn));
+        //switch (robotNum)
+        //{
+        //case 6:
+        //for(int cnt = 1 ; cnt<staticPositions.count() ; cnt++)
+
+
+        //}
+    }
 }

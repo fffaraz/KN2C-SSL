@@ -11,6 +11,7 @@ Agent::Agent(int rid, OutputBuffer *outputbuffer, WorldModel *wm, QObject *paren
 {
     qDebug() << "Agent Initialization... (ID=" << _rid <<")";
     _skill=0;
+    _tactic = 0;
     _timer.setInterval(AGENT_TIMER);
     connect(&_timer, SIGNAL(timeout()), this, SLOT(timer_timeout()));
 }
@@ -19,25 +20,24 @@ void Agent::timer_timeout()
 {
     RobotCommand rc;
     bool ans=false;
-    if(_skill)
-        ans = _skill->execute(rc);
+    if(_tactic && _wm->ourRobot[_rid].isValid)
+    {
+        _tactic->setRID(RID());
+        ans = _tactic->execute(rc);
+    }
     if(ans && _wm->ourRobot[_rid].isValid)
         SendCommand(rc);
     else if(_wm->ourRobot[_rid].isValid)
         Halt();
 }
 
-void Agent::AssignSkill(Skill *skill)
-{
-    _skill=skill;
-}
 
 void Agent::SendCommand(RobotCommand rc)
 {
     Position mypos=_wm->ourRobot[_rid].pos;
     Position myvel=_wm->ourRobot[_rid].vel;
     float fdest = (rc.FinalPos.loc-rc.TargetPos.loc).length();
-    ControllerResult ctrlres = _outputbuffer->ctrl->calc(mypos,myvel,rc.TargetPos,_rid, fdest, rc.Speed);
+    ControllerResult ctrlres = _outputbuffer->ctrl->calc(mypos,myvel,rc.TargetPos,_rid, fdest, rc.Speed,_wm);
     // Real Game Packet
     RobotData reRD;
     reRD.RID = _rid;
@@ -45,7 +45,12 @@ void Agent::SendCommand(RobotCommand rc)
     reRD.M2 = ctrlres.ms3.M2;
     reRD.M3 = ctrlres.ms3.M3;
     reRD.M4 = 0; // we have 3 motors!
-    reRD.KCK = (rc.kickspeedx>0)?1:0;
+    if (rc.kickspeedx>3)
+        reRD.KCK = 4;
+    else if (rc.kickspeedx>0)
+        reRD.KCK = 1;
+    else
+        reRD.KCK = 0;
     reRD.FLG = _FLG;
     reRD.ASK = _ASK;
     _outputbuffer->wpck.AddRobot(reRD);
@@ -104,4 +109,22 @@ void Agent::Halt()
     grRD.kickspeedz=0;
     grRD.spinner=0;
     _outputbuffer->grpck.AddRobot(grRD);
+}
+
+void Agent::assignTactic(Tactic *tactic)
+{
+    _tactic = tactic;
+}
+
+bool Agent::isDummy()
+{
+    if (_tactic)
+        return false;
+    else
+        return true;
+}
+
+Tactic* Agent::tactic()
+{
+    return _tactic;
 }

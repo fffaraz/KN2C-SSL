@@ -3,23 +3,41 @@
 
 #include <QObject>
 #include "worldmodel.h"
-#include "strategyresult.h"
-#include "role.h"
+#include "constants.h"
+#include "math.h"
 
 class Knowledge : public QObject
 {
     Q_OBJECT
 public:
-    explicit Knowledge(WorldModel* wm, StrategyResult* sr, QObject *parent = 0);
-    int CountActiveAgents();
-    QList<int> ActiveAgents();
+    explicit Knowledge(WorldModel* wm, QObject *parent = 0);
+
+    int countActiveAgents();
+    int countActiveRoles();
+
+    int ballKicker();
+    int findNearestOpponentToBall();
+    int findNearestTeammateToPointByStaticPosition(Vector2D point, PlayMode pm = GameOn);
+    int findNearestTeammateToPoint(Vector2D point);
+    int findOpponentKicker();
+
+    QList<int> activeAgents();
     QList<int> findRole(QString name);
     QList<int> findNearestTo(Vector2D loc);
-    int findOppAttacker();
+
+    Vector2D findNearestPositionToRobot(QList <Vector2D> positions , int rid);
+
+    bool findNearestPointToDummy(Vector2D point,int rid);
+    bool isBallKickable(int Rid);
+    bool isGoalieValid();
+
+    bool isInPenaltyArea(Vector2D vec);
 
 private:
     WorldModel* _wm;
-    StrategyResult* _sr;
+
+public:
+    bool validGoalie;
 
 signals:
 

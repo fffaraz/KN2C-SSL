@@ -73,21 +73,6 @@ INCLUDEPATH += ai/strategy
 
 SOURCES +=	main.cpp \
     etc/logger.cpp \
-    geom/voronoi_diagram_original.cpp \
-    geom/vector_2d.cpp \
-    geom/triangle_2d.cpp \
-    geom/segment_2d.cpp \
-    geom/sector_2d.cpp \
-    geom/rect_2d.cpp \
-    geom/ray_2d.cpp \
-    geom/polygon_2d.cpp \
-    geom/matrix_2d.cpp \
-    geom/line_2d.cpp \
-    geom/delaunay_triangulation.cpp \
-    geom/convex_hull.cpp \
-    geom/composite_region_2d.cpp \
-    geom/circle_2d.cpp \
-    geom/angle_deg.cpp \
     grSim/grSim_Replacement.pb.cc \
     grSim/grSim_Packet.pb.cc \
     grSim/grSim_Commands.pb.cc \
@@ -124,70 +109,66 @@ SOURCES +=	main.cpp \
     aibase/ai.cpp \
     aibase/statemachine.cpp \
     aibase/navigation.cpp \
-    aibase/skill.cpp \
-    ai/skill/skillnull.cpp \
-    ai/skill/skillballtracking.cpp \
     aibase/coach.cpp \
-    ai/skill/skillgotoposition.cpp \
-    aibase/tactic.cpp \
-    aibase/play.cpp \
     aibase/strategy.cpp \
     ai/strategy/strategydefault.cpp \
-    ai/navigation/navigationdefault.cpp \
-    aibase/role.cpp \
-    ai/skill/skillcircle.cpp \
-    ai/role/rolegoalie.cpp \
-    ai/tactic/tacticnull.cpp \
-    ai/role/rolenull.cpp \
-    ai/play/playnull.cpp \
-    ai/play/playstop.cpp \
     ai/knowledge.cpp \
-    ai/tactic/tacticstop.cpp \
-    ai/tactic/tacticdefend.cpp \
-    ai/skill/skillgoalie.cpp \
+    aibase/skill.cpp \
+    ai/strategy/strategytest.cpp \
+    ai/skill/skillgotoposition.cpp \
+    aibase/formationparser.cpp \
+    ssl/formationdata.cpp \
+    aibase/role.cpp \
+    aibase/tactic.cpp \
     ai/tactic/tacticgoalie.cpp \
-    ai/role/roledefender.cpp \
-    ai/play/playhalt.cpp \
-    ai/play/playkickoffour.cpp \
-    ai/play/playkickoffopp.cpp \
-    ai/play/playpenaltyour.cpp \
-    ai/play/playpenaltyopp.cpp \
-    ai/play/playgameon.cpp \
-    ai/play/playfreekickour.cpp \
-    ai/play/playfreekickopp.cpp \
-    ai/role/roleattacker.cpp \
-    ai/tactic/tacticattack.cpp \
-    ai/tactic/tacticblock.cpp \
-    ai/skill/skillwait.cpp \
-    ai/skill/skillkick.cpp \
-    ai/tactic/tactictest.cpp \
-    ai/play/playtest.cpp \
-    ai/skill/skillgoaliepenalty.cpp
+    ai/tactic/tacticcenterback.cpp \
+    ai/tactic/tacticcenterforward.cpp \
+    ai/tactic/tacticcentermidfielder.cpp \
+    ai/tactic/tacticleftback.cpp \
+    ai/tactic/tacticrightback.cpp \
+    ai/tactic/tacticrightmidfielder.cpp \
+    ai/tactic/tacticleftmidfielder.cpp \
+    ai/tactic/tacticleftforward.cpp \
+    ai/tactic/tacticrightforward.cpp \
+    ai/navigation/navigationdefault.cpp \
+    ai/navigation/rrt/tree.cpp \
+    ai/navigation/rrt/rrtplan.cpp \
+    ai/navigation/rrt/obstacle.cpp \
+    ai/skill/skillkickball.cpp \
+    aibase/behavior.cpp \
+    ai/behavior/behaviorfreekick.cpp \
+    ai/behavior/behaviorstop.cpp \
+    geom/voronoi_diagram_original.cpp \
+    geom/vector_2d.cpp \
+    geom/triangle_2d.cpp \
+    geom/segment_2d.cpp \
+    geom/sector_2d.cpp \
+    geom/rect_2d.cpp \
+    geom/ray_2d.cpp \
+    geom/polygon_2d.cpp \
+    geom/matrix_2d.cpp \
+    geom/line_2d.cpp \
+    geom/delaunay_triangulation.cpp \
+    geom/convex_hull.cpp \
+    geom/composite_region_2d.cpp \
+    geom/circle_2d.cpp \
+    geom/angle_deg.cpp \
+    geom/formation_dt.cpp \
+    ai/behavior/behaviorkickoff.cpp \
+    ssl/sslrefbox/game_state_our_UI.cpp \
+    ai/behavior/behaviorpass.cpp \
+    ai/behavior/behaviorshoot.cpp \
+    ai/skill/skillturntopoint.cpp \
+    ai/behavior/behaviorgotostaticball.cpp \
+    ai/skill/skillturntoangle.cpp \
+    ai/behavior/behaviorpenalty.cpp \
+    ai/skill/skillmoveoncircle.cpp
 
 HEADERS  += \
     etc/settings.h \
     etc/logger.h \
     etc/constants.h \
     etc/base.h \
-    geom/voronoi_diagram_original.h \
-    geom/voronoi_diagram.h \
-    geom/vector_2d.h \
-    geom/triangle_2d.h \
-    geom/size_2d.h \
-    geom/segment_2d.h \
-    geom/sector_2d.h \
-    geom/region_2d.h \
-    geom/rect_2d.h \
-    geom/ray_2d.h \
-    geom/polygon_2d.h \
-    geom/matrix_2d.h \
-    geom/line_2d.h \
-    geom/geom.h \
-    geom/delaunay_triangulation.h \
-    geom/convex_hull.h \
-    geom/composite_region_2d.h \
-    geom/circle_2d.h \
-    geom/angle_deg.h \
     grSim/grSim_Replacement.pb.h \
     grSim/grSim_Packet.pb.h \
     grSim/grSim_Commands.pb.h \
@@ -233,52 +214,71 @@ HEADERS  += \
     aibase/ai.h \
     aibase/statemachine.h \
     aibase/navigation.h \
-    aibase/skill.h \
     aibase/robotcommand.h \
-    ai/skill/skillnull.h \
-    ai/skill/skillballtracking.h \
     aibase/coach.h \
-    ai/skill/skillgotoposition.h \
-    aibase/tactic.h \
-    ai/skills.h \
-    ai/tactics.h \
-    aibase/play.h \
-    ai/plays.h \
-    ai/roles.h \
     aibase/strategy.h \
     ai/strategy/strategydefault.h \
-    ai/navigation/navigationdefault.h \
-    aibase/role.h \
-    ai/strategies.h \
-    ai/skill/skillcircle.h \
-    ai/role/rolegoalie.h \
-    ai/tactic/tacticnull.h \
-    ai/role/rolenull.h \
-    ai/play/playnull.h \
-    ai/play/playstop.h \
     ai/knowledge.h \
-    ai/tactic/tacticstop.h \
-    ai/tactic/tacticdefend.h \
-    ai/skill/skillgoalie.h \
+    aibase/skill.h \
+    ai/Skills.h \
+    ai/strategy/strategytest.h \
+    ai/skill/skillgotoposition.h \
+    aibase/formationparser.h \
+    ssl/formationdata.h \
+    aibase/role.h \
+    aibase/tactic.h \
+    ai/Tactics.h \
     ai/tactic/tacticgoalie.h \
-    ai/role/roledefender.h \
-    ai/play/playhalt.h \
-    ai/play/playkickoffour.h \
-    ai/play/playkickoffopp.h \
-    ai/play/playpenaltyour.h \
-    ai/play/playpenaltyopp.h \
-    ai/play/playgameon.h \
-    ai/play/playfreekickour.h \
-    ai/play/playfreekickopp.h \
-    ai/role/roleattacker.h \
-    ai/tactic/tacticattack.h \
-    ai/tactic/tacticblock.h \
-    ai/skill/skillwait.h \
-    aibase/strategyresult.h \
-    ai/skill/skillkick.h \
-    ai/tactic/tactictest.h \
-    ai/play/playtest.h \
-    ai/skill/skillgoaliepenalty.h
+    ai/tactic/tacticcenterback.h \
+    ai/tactic/tacticcenterforward.h \
+    ai/tactic/tacticcentermidfielder.h \
+    ai/tactic/tacticleftback.h \
+    ai/tactic/tacticrightback.h \
+    ai/tactic/tacticrightmidfielder.h \
+    ai/tactic/tacticleftmidfielder.h \
+    ai/tactic/tacticleftforward.h \
+    ai/tactic/tacticrightforward.h \
+    ai/navigation/navigationdefault.h \
+    ai/navigation/rrt/tree.h \
+    ai/navigation/rrt/rrtplan.h \
+    ai/navigation/rrt/rrtools.h \
+    ai/navigation/rrt/obstacle.h \
+    ai/skill/skillkickball.h \
+    aibase/behavior.h \
+    ai/behavior/behaviorfreekick.h \
+    ai/behavior/behaviorstop.h \
+    ai/Behaviors.h \
+    geom/voronoi_diagram_original.h \
+    geom/voronoi_diagram.h \
+    geom/vector_2d.h \
+    geom/triangle_2d.h \
+    geom/size_2d.h \
+    geom/segment_2d.h \
+    geom/sector_2d.h \
+    geom/region_type.h \
+    geom/region_2d.h \
+    geom/rect_2d.h \
+    geom/ray_2d.h \
+    geom/polygon_2d.h \
+    geom/matrix_2d.h \
+    geom/line_2d.h \
+    geom/geom.h \
+    geom/formation_dt.h \
+    geom/delaunay_triangulation.h \
+    geom/convex_hull.h \
+    geom/composite_region_2d.h \
+    geom/circle_2d.h \
+    geom/angle_deg.h \
+    ai/behavior/behaviorkickoff.h \
+    ssl/sslrefbox/game_state_our_UI.h \
+    ai/behavior/behaviorpass.h \
+    ai/behavior/behaviorshoot.h \
+    ai/skill/skillturntopoint.h \
+    ai/behavior/behaviorgotostaticball.h \
+    ai/skill/skillturntoangle.h \
+    ai/behavior/behaviorpenalty.h \
+    ai/skill/skillmoveoncircle.h
+
 
 FORMS    +=	ui/mainwindow.ui
 
@@ -287,7 +287,6 @@ OTHER_FILES += \
 
 RESOURCES += \
     resources.qrc
-
 
 
 

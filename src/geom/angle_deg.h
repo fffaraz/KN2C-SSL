@@ -683,6 +683,22 @@ operator-( const double & lhs,
     return rcsc::AngleDeg( lhs ) -= rhs;
 }
 
+/*-------------------------------------------------------------------*/
+/*!
+  \brief operator div(U, T)
+  \param lhs left hand side argument
+  \param rhs right hand side argument
+  \return new angle
+ */
+inline
+const
+rcsc::AngleDeg
+operator/( const rcsc::AngleDeg & lhs,
+           const double & rhs )
+{
+    return rcsc::AngleDeg ( lhs.degree() / rhs );
+}
+
 /////////////////////////////////////////////////////
 // predicate operator
 

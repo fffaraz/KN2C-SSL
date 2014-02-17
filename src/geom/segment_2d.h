@@ -32,8 +32,8 @@
 #ifndef RCSC_GEOM_SEGMENT2D_H
 #define RCSC_GEOM_SEGMENT2D_H
 
-#include <geom/line_2d.h>
-#include <geom/vector_2d.h>
+#include "line_2d.h"
+#include "vector_2d.h"
 
 #include <cmath>
 

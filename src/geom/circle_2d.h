@@ -34,8 +34,8 @@
 
 #include <iostream>
 
-#include <geom/region_2d.h>
-#include <geom/vector_2d.h>
+#include "region_2d.h"
+#include "vector_2d.h"
 
 namespace rcsc {
 
@@ -107,6 +107,18 @@ public:
           }
           return *this;
       }
+
+    virtual
+    Region2DType type() const
+    {
+        return REGION_CIRCLE2D;
+    }
+
+    virtual
+    Vector2D centroid() const
+    {
+        return M_center;
+    }
 
     /*!
       \brief get the area value of this circle

@@ -32,7 +32,7 @@ void RenderArea::paintEvent(QPaintEvent *)
     painter.drawRect(0,0,740,540);
 
     // FPS
-    painter.drawText(20,20,QString::number(_fps.FPS()));
+    painter.drawText(20,20,"FPS : " + QString::number(_fps.FPS()));
 
     painter.translate(CENTER_X,CENTER_Y);
 

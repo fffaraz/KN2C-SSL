@@ -56,7 +56,7 @@ for (int i=0; i<pck.robots_##__COLOR__##_size(); ++i) \
 { \
     int rid = pck.robots_##__COLOR__(i).robot_id(); \
     if (frm.__TEAM__##Robots[rid].count()>=VOBJ_MAX_NUM) continue; \
-    if ((pck.robots_##__COLOR__(i).has_orientation())&&(pck.robots_##__COLOR__(i).has_confidence())&&(pck.robots_##__COLOR__(i).confidence()>MIN_CONF)&&(fabs(pck.robots_##__COLOR__(i).x())<FIELD_MAX_X)&&(fabs(pck.robots_##__COLOR__(i).y())<FIELD_MAX_Y)) \
+    if ((pck.robots_##__COLOR__(i).has_orientation())&&(pck.robots_##__COLOR__(i).has_confidence())&&(pck.robots_##__COLOR__(i).confidence()>MIN_CONF)&&(fabs(pck.robots_##__COLOR__(i).x())<FIELD_MAX_X + CAMERA_OFFSET)&&(fabs(pck.robots_##__COLOR__(i).y())<FIELD_MAX_Y + CAMERA_OFFSET)) \
     { \
         frm.__TEAM__##Robots[rid].append(VisionRobot(Vector2D(pck.robots_##__COLOR__(i).x()*ourSide, pck.robots_##__COLOR__(i).y()*ourSide), time, pck.robots_##__COLOR__(i).orientation()+(1.0-ourSide)*M_PI_2,rid)); \
         frm.notseen_##__TEAM__##Robot[rid] = 0; \

@@ -7,8 +7,9 @@
 #include <QMap>
 #include "position.h"
 #include "scriptengine.h"
+#include "worldmodel.h"
 
-#define GRSIM true
+#define GRSIM false
 
 class ScriptEngine;
 
@@ -52,14 +53,14 @@ class Controller : public QObject
     Q_OBJECT
 public:
     explicit Controller(ScriptEngine* engine, QObject *parent = 0);
-    ControllerResult calc(Position curpos, Position curvel, Position target, int rid, float fdest, float speed);
+    ControllerResult calc(Position curpos, Position curvel, Position target, int rid, float fdest, float speed,WorldModel* _wm);
 
 private:
     ScriptEngine* _engine;
     RobotSpeed calcRobotSpeed(ControllerData& data);
     MotorSpeed calcMotorSpeed3(RobotSpeed rs);
     MotorSpeed calcMotorSpeed4(RobotSpeed rs);
-
+    WorldModel *wm;
     int MAXMOTORSRPM;
     float WHEELDIAMETER;
     float ROBOTRADIUS;

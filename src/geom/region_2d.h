@@ -32,6 +32,8 @@
 #ifndef RCSC_GEOM_REGION2D_H
 #define RCSC_GEOM_REGION2D_H
 
+#include "region_type.h"
+
 namespace rcsc {
 
 class Vector2D;
@@ -73,6 +75,14 @@ public:
     virtual
     bool contains( const Vector2D & point ) const = 0;
 
+    virtual
+    Vector2D centroid() const = 0;
+
+    virtual
+    Region2DType type() const
+    {
+        return REGION_NONE;
+    }
 };
 
 }

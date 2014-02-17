@@ -22,6 +22,7 @@
 #include "controller.h"
 #include "agent.h"
 #include "ai.h"
+#include "formationparser.h"
 
 class ScriptEngine;
 class Controller;

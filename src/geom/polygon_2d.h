@@ -30,7 +30,8 @@
 #ifndef RCSC_GEOM_POLYGON2D_H
 #define RCSC_GEOM_POLYGON2D_H
 
-#include <geom/region_2d.h>
+#include "region_2d.h"
+#include "vector_2d.h"
 
 #include <vector>
 
@@ -59,6 +60,29 @@ public:
       \param v array of points
     */
     Polygon2D( const std::vector< Vector2D > & v );
+
+    virtual
+    Region2DType type() const
+    {
+        return REGION_POLYGON2D;
+    }
+
+    virtual
+    Vector2D centroid() const
+    {
+        Vector2D vec;
+
+        std::vector< Vector2D >::const_iterator it;
+
+        for (it = M_vertices.begin(); it != M_vertices.end(); it ++)
+        {
+            vec.x += (*it).x;
+            vec.y += (*it).y;
+        }
+
+        return vec / M_vertices.size();
+    }
+
 
     /*!
       \brief clear all data.

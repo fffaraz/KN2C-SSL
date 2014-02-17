@@ -32,10 +32,10 @@
 #ifndef RCSC_GEOM_RECT2D_H
 #define RCSC_GEOM_RECT2D_H
 
-#include <geom/region_2d.h>
-#include <geom/size_2d.h>
-#include <geom/line_2d.h>
-#include <geom/vector_2d.h>
+#include "region_2d.h"
+#include "size_2d.h"
+#include "line_2d.h"
+#include "vector_2d.h"
 
 namespace rcsc {
 
@@ -72,7 +72,8 @@ public:
         : M_top_left( 0.0, 0.0 )
         , M_size( 0.0, 0.0 )
       { }
-private:
+
+public:
     /*!
       \brief constructor
       \param left_x left x
@@ -101,7 +102,6 @@ private:
         , M_size( length, width )
       { }
 
-public:
     /*!
       \brief constructor with variables
       \param top_left top left point
@@ -136,6 +136,18 @@ public:
               M_top_left.y = bottom_right.y;
           }
       }
+
+    virtual
+    Vector2D centroid() const
+    {
+        return M_top_left + Vector2D(M_size.length() / 2, M_size.width() / 2);
+    }
+
+    virtual
+    Region2DType type() const
+    {
+        return REGION_RECT2D;
+    }
 
     /*!
       \brief create rectangle with center point and size.

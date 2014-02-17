@@ -32,7 +32,7 @@
 #ifndef RCSC_GEOM_VECTOR2D_H
 #define RCSC_GEOM_VECTOR2D_H
 
-#include <geom/angle_deg.h>
+#include "angle_deg.h"
 
 #include <functional>
 #include <iostream>
@@ -189,6 +189,15 @@ public:
           return r2();
       }
 
+    int signX() const
+      {
+        return x > 0 ? 1 : -1;
+      }
+
+    int signY() const
+      {
+        return y > 0 ? 1 : -1;
+      }
     /*!
       \brief get the angle of vector.
       \return angle

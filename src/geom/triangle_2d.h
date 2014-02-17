@@ -32,9 +32,9 @@
 #ifndef RCSC_GEOM_TRIANGLE2D_H
 #define RCSC_GEOM_TRIANGLE2D_H
 
-#include <geom/region_2d.h>
-#include <geom/vector_2d.h>
-#include <geom/segment_2d.h>
+#include "region_2d.h"
+#include "vector_2d.h"
+#include "segment_2d.h"
 
 namespace rcsc {
 
@@ -80,6 +80,12 @@ public:
         , M_b( seg.terminal() )
         , M_c( v )
       { }
+
+    virtual
+    Region2DType type() const
+    {
+        return REGION_TRIANGLE2D;
+    }
 
     /*!
       \brief assign new vertex points

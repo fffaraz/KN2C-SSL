@@ -39,8 +39,15 @@ void SSLRefBox::readPendingPacket(QByteArray data, QString ip, int port)
 void SSLRefBox::parse(GameStatePacket pck)
 {
     bool ball_moved = (_lastBall.pos.loc - _wm->ball.pos.loc).length()>_ball_min;
-    _wm->cmgs.transition(pck.cmd, ball_moved);
-    updategs(pck.cmd, ball_moved);
+    if(!_wm->referee_our_ui)
+        _wm->cmgs.transition(pck.cmd, ball_moved);
+    else
+        _wm->cmgs.transition(_wm->get_ui_state(),_wm->get_ui_ball_moved());
+    _wm->updatePlayMode();
+    if(!_wm->referee_our_ui)
+        updategs(pck.cmd, ball_moved);
+    else
+        updategs(_wm->get_ui_state(),_wm->get_ui_ball_moved());
 
     if(pck.cmd_counter != _lastCMDCounter) // new cmd
     {
@@ -69,6 +76,7 @@ void SSLRefBox::parse(GameStatePacket pck)
 void SSLRefBox::updategs(char cmd, bool)
 {
     _wm->gs_last=_wm->gs;
+
     switch(cmd)
     {
     case COMM_HALT:

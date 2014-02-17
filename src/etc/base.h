@@ -47,9 +47,33 @@ enum GameStateType
     STATE_Free_kick_Opp = 10,
 
     STATE_Indirect_Free_kick_Our = 11,
-    STATE_Indirect_Free_kick_Opp = 12,
+    STATE_Indirect_Free_kick_Opp = 12
 
 
+};
+
+enum PlayMode
+{
+    NormalStart = 0,
+    Halt = 1,
+    Stop = 2,
+    GameOn = 3,
+    KickOffOur = 4,
+    KickOffOpp = 5,
+    IndirectFreeKickOur = 6,
+    IndirectFreeKickOpp = 7,
+    DirectFreeKickOur = 8,
+    DirectFreeKickOpp = 9,
+    PenaltyKickOur = 10,
+    PenaltyKickOpp = 11
+};
+
+enum GoToStaticBallState
+{
+    GTSB_BEHINDBALL,
+    GTSB_MOVETOTURN,
+    GTSB_WAIT,
+    GTSB_STOP
 };
 
 #endif // BASE_H

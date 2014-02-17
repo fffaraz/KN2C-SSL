@@ -9,6 +9,9 @@
 #include "worldmodel.h"
 #include "robotcommand.h"
 #include "skill.h"
+#include "tactic.h"
+#include "Tactics.h"
+
 
 class Agent : public QObject
 {
@@ -16,6 +19,12 @@ class Agent : public QObject
 public:
     explicit Agent(int rid, OutputBuffer* outputbuffer, WorldModel* wm, QObject *parent = 0);
     int RID() { return _rid; }
+    RobotCommand rc;
+    void assignTactic(Tactic* tactic);
+    bool isDummy();
+    QString temp(){return _tactic->Name();}
+    Tactic* tactic();
+
 
 private:
     QTimer _timer;
@@ -23,6 +32,7 @@ private:
     int _rid;
     WorldModel* _wm;
     Skill* _skill;
+    Tactic* _tactic;
 
     //////////////////
     char _FLG;
@@ -36,7 +46,6 @@ private slots:
 signals:
 
 public slots:
-    void AssignSkill(Skill* skill);
     void Start();
     void Stop();
     void Halt();

@@ -5,22 +5,21 @@
 #include <QMap>
 #include "worldmodel.h"
 #include "knowledge.h"
-#include "strategyresult.h"
+#include "agent.h"
 
 class Strategy : public QObject
 {
     Q_OBJECT
 public:
-    explicit Strategy(WorldModel* wm, QString name, QObject *parent = 0);
+    explicit Strategy(WorldModel* wm, QMap<int,Agent*> &agents, QString name, QObject *parent = 0);
     QString Name() { return _name; }
-    Skill* getSkill(int rid);
 
     virtual bool ExecuteStrategyEngine()=0;
 
 protected:
     QString _name;
     WorldModel* _wm;
-    StrategyResult _result;
+    QMap<int,Agent*> &_agents;
 
 signals:
 

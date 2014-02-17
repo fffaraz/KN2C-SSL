@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include "position.h"
-#include "agent.h"
 #include "worldmodel.h"
 
 class Navigation : public QObject
@@ -12,7 +11,7 @@ class Navigation : public QObject
 public:
     explicit Navigation(WorldModel* wm, QString name, QObject *parent = 0);
     QString Name() { return _name; }
-    virtual bool execute(int rid, Position FinalPos, Position& TargetPos)=0;
+    virtual bool execute(int rid, Position FinalPos, Position &TargetPos, float &RobotSpeed, bool ballAsObstacle = true)=0;
 protected:
     QString _name;
     WorldModel* _wm;
